@@ -1,8 +1,9 @@
 import gi
 import subprocess
+import os
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-
+script_dir = os.path.dirname(__file__)
 
 class ScreenOrientationManager(Gtk.Window):
 
@@ -133,15 +134,15 @@ class ScreenOrientationManager(Gtk.Window):
         message_dialog.destroy()
 
     def rotate(self, rotation):
-        proc = subprocess.Popen(['sh', 'bin/' + rotation + '.sh', self.touchpad_entry.get_text(), self.screen_entry.get_text(), self.display_entry.get_text()], stdout=subprocess.PIPE).wait()
+        proc = subprocess.Popen(['sh', os.path.join(script_dir,'bin/' + rotation + '.sh'), self.touchpad_entry.get_text(), self.screen_entry.get_text(), self.display_entry.get_text()], stdout=subprocess.PIPE).wait()
 
     def encache(self, touchpad, touchscreen, display, checked):
-        with open('bin/config.txt', 'w') as file:
+        with open(os.path.join(script_dir,'bin/config.txt'), 'w') as file:
             file.write(touchpad + "\n" + touchscreen + "\n" + display + "\n" + checked)
 
     def popcache(self):
         devices = []
-        with open('bin/config.txt', 'r') as file:
+        with open(os.path.join(script_dir,'bin/config.txt'), 'r') as file:
             devices = [file.readline().strip(), file.readline().strip(), file.readline().strip(), file.readline().strip()]
         return devices
 
